@@ -51,7 +51,7 @@ SMARTMISSILE_CONFIG["HighFlight_antiair1"] = {
         predictionType = 2,
         sectorRadius = 7000,
         sectorWidth = 30,
-        courseHoldDelay = 0.01,
+        courseHoldDelay = 1,
 }
 
 function Load(gameStart)
