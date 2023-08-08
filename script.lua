@@ -13,6 +13,8 @@ make missiles choose untargeted projectiles to spread the damage
 
 GetNodesInSector returns countermeassurements and projectiles only, if it finds em
 
+perhaps GetNodesInSector raycast targets to check visibility. Discard if not optimised
+
 make debug stuff togglable 
 
 starting working on the flying stuff
