@@ -11,6 +11,12 @@ TODO
 
 make missiles choose untargeted projectiles to spread the damage
 
+GetNodesInSector returns countermeassurements and projectiles only, if it finds em
+
+make debug stuff togglable 
+
+starting working on the flying stuff
+
 ]]
 
 function Load(gameStart)
@@ -40,7 +46,6 @@ end
 
 function OnWeaponFired(teamId, saveName, weaponId, projectileNodeId, projectileNodeIdFrom)
         MakeSmartMissile(teamId, projectileNodeId)
-        --Print(saveName)
 end
 
 function OnProjectileDestroyed(nodeId, teamId, saveName, structureIdHit, destroyType)
