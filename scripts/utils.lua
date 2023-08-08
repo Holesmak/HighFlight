@@ -111,7 +111,7 @@ function DrawCircleSector(position, angle, degrees, radius, color, fadetime, mid
         local lowerangle = angle - (degrees)
         local upperrangle = angle + (degrees)
 
-        local lineSegments = 10
+        local lineSegments = 4
 
         if gradient then
                 if gradienMin == nil then
@@ -140,8 +140,8 @@ function DrawCircleSector(position, angle, degrees, radius, color, fadetime, mid
                 end
         end
 
-        if color.a > 15 then
-                local vertexes = math.ceil(radius / 100)
+        if color.a > 15  and gradientMax and gradientMax > 0.05 then
+                local vertexes = math.ceil(radius / 250)
                 local currentangle = lowerangle
                 local step = 2 * degrees / vertexes
                 for i = 1, vertexes, 1 do

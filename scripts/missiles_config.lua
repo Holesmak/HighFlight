@@ -3,6 +3,7 @@ DrawDebug = true
 SMARTMISSILE_SAVENAMES = {
         "rocketemp",
         "missile2",
+--        "missile",
         "rocket",
         "rocketmi24",
         "HighFlight_antiair1"
@@ -68,6 +69,21 @@ SMARTMISSILE_CONFIG["missile2"] = {
         trackerGradientMin = 1,
         trackerGradientMax = 0,
 }
+
+--SMARTMISSILE_CONFIG["missile"] = {
+--        ignoreNeutrals = true,
+--        ignoreProjectiles = true,
+--        ignoreStructures = false,
+--        predictionType = 1,
+--        sectorRadius = 3000,
+--        sectorWidth = 60,
+--        courseHoldDelay = 20,
+--        
+--        trackerColor = Colour(255, 30, 30, 100),
+--        trackerGradient = true,
+--        trackerGradientMin = 1,
+--        trackerGradientMax = 0,
+--}
 
 SMARTMISSILE_CONFIG["HighFlight_antiair1"] = {
         ignoreNeutrals = true,

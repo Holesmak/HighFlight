@@ -96,50 +96,59 @@ function UpdateMissilesVision(frame)
         end
 end
 
-function GetNodesInSector(position, anglev, degrees, teamOwner, radius, ignoreNeutrals, ignoreProjectiles, ignoreStructures, drawVisuals, smartMissileConfig, color) -- CLEAN THIS SO IT DOESNT RUN THE SAME CODE TWICE
-        --Print(GetVectorAngle(angle))
-        --Print(AngleToVector(angle, 5).x .. "   " .. AngleToVector(angle, 5).y)
-        --Print(angle.x .. "   " .. angle.y)
-        local enemyteams = GetEnemyTeams(teamOwner, ignoreNeutrals)
-        local angle = GetVectorAngle(anglev)
+function GetNodesInSector(position, anglev, degrees, teamOwner, radius, ignoreNeutrals, ignoreProjectiles, ignoreStructures, drawVisuals, smartMissileConfig, color) -- OPTIMISE THIS. BIGGEST LAG SOURCE. ADD CHECK ON THE CLOSEST STRUCTURE + ITS RADIUS
         local nodes = {}
 
         if drawVisuals then
+                local angle = GetVectorAngle(anglev)
                 if smartMissileConfig then
-                        DrawCircleSector(position, angle, degrees, radius, smartMissileConfig.trackerColor, 1/20, false, smartMissileConfig.trackerGradient, smartMissileConfig.trackerGradientMax, smartMissileConfig.trackerGradientMin)  
+                        DrawCircleSector(position, angle, degrees, radius, smartMissileConfig.trackerColor, 1 / 20, false, smartMissileConfig.trackerGradient, smartMissileConfig.trackerGradientMax, smartMissileConfig.trackerGradientMin)
                 elseif color then
-                        DrawCircleSector(position, angle, degrees, radius, color, 1/20, false)
+                        DrawCircleSector(position, angle, degrees, radius, color, 1 / 20, false)
                 end
         end
 
-        --if not CheckType(enemyteams, "number") then --dont ignore neutrals
-                for k, enemyteam in pairs(enemyteams) do
-                        if not ignoreStructures then
-                                for i = 0, NodeCount(enemyteam), 1 do
-                                        local nodeid = GetNodeId(enemyteam, i)
-                                        local nodepos = NodePosition(nodeid)
-                                        local dirNonNor = nodepos - position
-                                        --local nodeangle = GetVectorAngle(Vec3Nor(dirNonNor))
-                                        local anglebetween = AngleBetweenTwoVectors(Vec3Nor(dirNonNor), anglev)
-                                        if anglebetween < degrees and Vec3Length(dirNonNor) < radius and NodeExists(nodeid) then
-                                                nodes[nodeid] = nodepos
-                                        end
+        local enemyteams = GetEnemyTeams(teamOwner, ignoreNeutrals)
+        for k, enemyteam in pairs(enemyteams) do
+                if not ignoreStructures then
+                        for i = 0, NodeCount(enemyteam), 1 do
+                                local nodeid = GetNodeId(enemyteam, i)
+                                if not NodeExists(nodeid) then
+                                        continue
                                 end
-                        end
-
-                        if not ignoreProjectiles then
-                                for i = 0, ProjectileCount(enemyteam), 1 do
-                                        local nodeid = GetProjectileId(enemyteam, i)
-                                        local nodepos = NodePosition(nodeid)
-                                        local dirNonNor = nodepos - position
-                                        --local nodeangle = GetVectorAngle(Vec3Nor(dirNonNor))
-                                        local anglebetween = AngleBetweenTwoVectors(Vec3Nor(dirNonNor), anglev)
-                                        if anglebetween < degrees and Vec3Length(dirNonNor) < radius and NodeExists(nodeid) and (GetNodeProjectileType(nodeid) == 2 or GetNodeProjectileType(nodeid) == 3) then
-                                                nodes[nodeid] = nodepos
-                                        end
+                                local nodepos = NodePosition(nodeid)
+                                local dirNonNor = nodepos - position
+                                if Vec3Length(dirNonNor) > radius then
+                                        continue
+                                end
+                                local anglebetween = AngleBetweenTwoVectors(Vec3Nor(dirNonNor), anglev)
+                                if anglebetween < degrees then
+                                        nodes[nodeid] = nodepos
                                 end
                         end
                 end
+                if not ignoreProjectiles then
+                        for i = 0, ProjectileCount(enemyteam), 1 do
+                                local nodeid = GetProjectileId(enemyteam, i)
+                                if not NodeExists(nodeid) then
+                                        continue
+                                end
+                                local nodeProjectileType = GetNodeProjectileType(nodeid)
+                                if nodeProjectileType ~= (2 or 3) then
+                                        continue
+                                end
+                                local nodepos = NodePosition(nodeid)
+                                local dirNonNor = nodepos - position
+                                if Vec3Length(dirNonNor) > radius then
+                                        continue
+                                end
+                                local anglebetween = AngleBetweenTwoVectors(Vec3Nor(dirNonNor), anglev)
+                                if anglebetween < degrees then
+                                        nodes[nodeid] = nodepos
+                                end
+                        end
+                end
+        end
         return nodes
 end
 
