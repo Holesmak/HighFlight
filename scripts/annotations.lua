@@ -1,3 +1,5 @@
+-- https://github.com/LuaLS/lua-language-server/wiki/Annotations#return
+
 ---@class forts
 ---@type function
 ---@return number teamCount Built in function.
