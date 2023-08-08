@@ -12,7 +12,9 @@ GetNodesInSector returns countermeassurements and projectiles only, if it finds 
 
 perhaps GetNodesInSector raycast targets to check visibility. Discard if not optimised
 
-make debug stuff togglable 
+add guidance delay
+
+make debug stuff togglable
 
 starting working on the flying stuff
 
@@ -40,7 +42,7 @@ function Update(frame)
 
         --local tEmp = GetRandomFloat(5.0, 10.0, "how long will emp last") --THE GENERATORS SYSTEM
         --for i = 0, GetWeaponCount(1), 1 do
-        --        if IsDeviceFullyBuilt(GetWeaponId(1, i)) then      
+        --        if IsDeviceFullyBuilt(GetWeaponId(1, i)) then
         --                EMPDevice(GetWeaponId(1, i), tEmp)
         --        end
         --end
