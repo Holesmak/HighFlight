@@ -14,6 +14,8 @@ perhaps GetNodesInSector raycast targets to check visibility. Discard if not opt
 
 add guidance delay
 
+missiles fuel runs out and it transforms to a missile without thrust power and thrusting effects (if it works good)
+
 make debug stuff togglable
 
 starting working on the flying stuff

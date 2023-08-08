@@ -14,7 +14,7 @@ function GetEnemyTeams(teamId, ignoreNeutrals) -- ADD RETURN SIDES ONLY PARAM
         else
                 for i = 1, GetTeamCount(), 1 do
                         local enemyside = GetTeamId(i) % 100
-                        if teamId % 100 ~= enemyside and ( enemyside == TEAM_1 or enemyside == TEAM_2 ) then
+                        if teamId % 100 ~= enemyside and (enemyside == TEAM_1 or enemyside == TEAM_2) then
                                 table.insert(teamstable, GetTeamId(i))
                                 --Print(GetTeamId(i))
                         end
@@ -107,22 +107,48 @@ function AngleToVector(angle, radius)
         end
 end
 
-function DrawCircleSector(position, angle, degrees, radius, color, fadetime, middleLine)
+function DrawCircleSector(position, angle, degrees, radius, color, fadetime, middleLine, gradient, gradientMax, gradienMin)
         local lowerangle = angle - (degrees)
         local upperrangle = angle + (degrees)
-        SpawnLine(position, position + AngleToVector(lowerangle, radius), color, fadetime)
-        SpawnLine(position, position + AngleToVector(upperrangle, radius), color, fadetime)
-        if middleLine then
-                SpawnLine(position, position + AngleToVector(angle, radius), color, fadetime)
+
+        local lineSegments = 10
+
+        if gradient then
+                if gradienMin == nil then
+                        gradienMin = 1
+                end
+                if gradientMax == nil then
+                        gradientMax = 0
+                end
+                local col
+                for i = 1, lineSegments, 1 do
+                        col = Colour(color.r, color.g, color.b, color.a * math.min(math.max((lineSegments - i) / lineSegments, gradientMax), gradienMin))
+                        local radmin = radius * (i - 1) / lineSegments
+                        local radmax = radius * i / lineSegments
+                        SpawnLine(position + AngleToVector(lowerangle, radmin), position + AngleToVector(lowerangle, radmax), col, fadetime)
+                        SpawnLine(position + AngleToVector(upperrangle, radmin), position + AngleToVector(upperrangle, radmax), col, fadetime)
+                        if middleLine then
+                                SpawnLine(position + AngleToVector(angle, radmin), position + AngleToVector(angle, radmax), col, fadetime)
+                        end
+                end
+                color = col
+        else
+                SpawnLine(position, position + AngleToVector(lowerangle, radius), color, fadetime)
+                SpawnLine(position, position + AngleToVector(upperrangle, radius), color, fadetime)
+                if middleLine then
+                        SpawnLine(position, position + AngleToVector(angle, radius), color, fadetime)
+                end
         end
 
-        local vertexes = math.ceil(radius / 100)
-        local currentangle = lowerangle
-        local step = 2 * degrees / vertexes
-        for i = 1, vertexes, 1 do
-                local nextangle = currentangle + step
-                SpawnLine(position + AngleToVector(currentangle, radius), position + AngleToVector(nextangle, radius), color, fadetime)
-                currentangle = nextangle
+        if color.a > 15 then
+                local vertexes = math.ceil(radius / 100)
+                local currentangle = lowerangle
+                local step = 2 * degrees / vertexes
+                for i = 1, vertexes, 1 do
+                        local nextangle = currentangle + step
+                        SpawnLine(position + AngleToVector(currentangle, radius), position + AngleToVector(nextangle, radius), color, fadetime)
+                        currentangle = nextangle
+                end
         end
 end
 

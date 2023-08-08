@@ -22,7 +22,9 @@ function MakeSmartMissile(teamId, projectileNodeId)
                 missile.saveName = GetNodeProjectileSaveName(projectileNodeId)
                 table.insert(data.smartMissiles, #data.smartMissiles + 1, missile)
                 --Print(SMARTMISSILE_CONFIG[missile.saveName].courseHoldDelay .. " : " .. #data.smartMissiles + 1)
-                ScheduleCall(SMARTMISSILE_CONFIG[missile.saveName].courseHoldDelay, MissileCourseHoldDelay, projectileNodeId)
+                if SMARTMISSILE_CONFIG[missile.saveName].courseHoldDelay ~= -1 then
+                        ScheduleCall(SMARTMISSILE_CONFIG[missile.saveName].courseHoldDelay, MissileCourseHoldDelay, projectileNodeId)
+                end
         end
 end
 
@@ -48,7 +50,7 @@ function UpdateMissilesVision(frame)
                 local anglev = Vec3Nor(selfvel)
                 local position = NodePosition(v.projectileNodeId)
                 local conf = SMARTMISSILE_CONFIG[GetNodeProjectileSaveName(v.projectileNodeId)]
-                local nodesPos = GetNodesInSector(position, anglev, conf.sectorWidth, v.teamId, conf.sectorRadius, conf.ignoreNeutrals, SMARTMISSILE_CONFIG[GetNodeProjectileSaveName(v.projectileNodeId)].ignoreProjectiles, conf.ignoreStructures)
+                local nodesPos = GetNodesInSector(position, anglev, conf.sectorWidth, v.teamId, conf.sectorRadius, conf.ignoreNeutrals, SMARTMISSILE_CONFIG[GetNodeProjectileSaveName(v.projectileNodeId)].ignoreProjectiles, conf.ignoreStructures, true, conf, White())
                 local targetedNode = ProcessNodesInSector(nodesPos, position)
                 local angle = GetVectorAngle(anglev)
 
@@ -94,7 +96,7 @@ function UpdateMissilesVision(frame)
         end
 end
 
-function GetNodesInSector(position, anglev, degrees, teamOwner, radius, ignoreNeutrals, ignoreProjectiles, ignoreStructures) -- CLEAN THIS SO IT DOESNT RUN THE SAME CODE TWICE
+function GetNodesInSector(position, anglev, degrees, teamOwner, radius, ignoreNeutrals, ignoreProjectiles, ignoreStructures, drawVisuals, smartMissileConfig, color) -- CLEAN THIS SO IT DOESNT RUN THE SAME CODE TWICE
         --Print(GetVectorAngle(angle))
         --Print(AngleToVector(angle, 5).x .. "   " .. AngleToVector(angle, 5).y)
         --Print(angle.x .. "   " .. angle.y)
@@ -102,7 +104,13 @@ function GetNodesInSector(position, anglev, degrees, teamOwner, radius, ignoreNe
         local angle = GetVectorAngle(anglev)
         local nodes = {}
 
-        DrawCircleSector(position, angle, degrees, radius, Red(), 0.05, false)
+        if drawVisuals then
+                if smartMissileConfig then
+                        DrawCircleSector(position, angle, degrees, radius, smartMissileConfig.trackerColor, 1/20, false, smartMissileConfig.trackerGradient, smartMissileConfig.trackerGradientMax, smartMissileConfig.trackerGradientMin)  
+                elseif color then
+                        DrawCircleSector(position, angle, degrees, radius, color, 1/20, false)
+                end
+        end
 
         --if not CheckType(enemyteams, "number") then --dont ignore neutrals
                 for k, enemyteam in pairs(enemyteams) do
@@ -132,34 +140,6 @@ function GetNodesInSector(position, anglev, degrees, teamOwner, radius, ignoreNe
                                 end
                         end
                 end
-        --else
-        --        local enemyteam = enemyteams
-        --        if not ignoreStructures then
-        --                for i = 0, NodeCount(enemyteam), 1 do
-        --                        local nodeid = GetNodeId(enemyteam, i)
-        --                        local nodepos = NodePosition(nodeid)
-        --                        local dirNonNor = nodepos - position
-        --                        --local nodeangle = GetVectorAngle(Vec3Nor(dirNonNor))
-        --                        local anglebetween = AngleBetweenTwoVectors(Vec3Nor(dirNonNor), anglev)
-        --                        if anglebetween < degrees and Vec3Length(dirNonNor) < radius and NodeExists(nodeid) then
-        --                                nodes[nodeid] = nodepos
-        --                        end
-        --                end
-        --        end
---
-        --        if not ignoreProjectiles then
-        --                for i = 0, ProjectileCount(enemyteam), 1 do
-        --                        local nodeid = GetProjectileId(enemyteam, i)
-        --                        local nodepos = NodePosition(nodeid)
-        --                        local dirNonNor = nodepos - position
-        --                        --local nodeangle = GetVectorAngle(Vec3Nor(dirNonNor))
-        --                        local anglebetween = AngleBetweenTwoVectors(Vec3Nor(dirNonNor), anglev)
-        --                        if anglebetween < degrees and Vec3Length(dirNonNor) < radius and NodeExists(nodeid) and (GetNodeProjectileType(nodeid) == 2 or GetNodeProjectileType(nodeid) == 3) then
-        --                                nodes[nodeid] = nodepos
-        --                        end
-        --                end
-        --        end
-        --end
         return nodes
 end
 
