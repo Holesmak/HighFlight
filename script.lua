@@ -32,10 +32,22 @@ end
 
 function Update(frame)
         MissilesUpdate(frame)
+
+        --for i = 0, GetWeaponCount(1), 1 do --THE AMMO SYSTEM
+        --        SetWeaponReloadTime(GetWeaponId(1, i), GetWeaponReloadTime(GetWeaponId(1, i)) - 0.001)
+        --end
+
+
+        --local tEmp = GetRandomFloat(5.0, 10.0, "how long will emp last") --THE GENERATORS SYSTEM
+        --for i = 0, GetWeaponCount(1), 1 do
+        --        if IsDeviceFullyBuilt(GetWeaponId(1, i)) then      
+        --                EMPDevice(GetWeaponId(1, i), tEmp)
+        --        end
+        --end
 end
 
 function OnLinkCreated(teamId, saveName, nodeA, nodeB, pos1, pos2, extrusion)
-        --local chance = GetRandomFloat(0.0, 1.0, "roll for decorative materials")
+        --local chance = GetRandomFloat(0.0, 1.0, "roll for decorative materials") -- THE MATERIAL DECORATIONS SYSTEM
         --if chance < 0.5 then
         --        CreateLink(teamId, "armour", nodeA, nodeB)
         --else
