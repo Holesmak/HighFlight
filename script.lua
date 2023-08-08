@@ -1,6 +1,3 @@
----@class script
----@field path string
-
 dofile("scripts/forts.lua")
 dofile(path .. "/scripts/utils.lua")
 
