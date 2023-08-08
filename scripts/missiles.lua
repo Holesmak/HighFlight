@@ -48,22 +48,22 @@ function UpdateMissilesVision(frame)
                 local anglev = Vec3Nor(selfvel)
                 local position = NodePosition(v.projectileNodeId)
                 local conf = SMARTMISSILE_CONFIG[GetNodeProjectileSaveName(v.projectileNodeId)]
-                local nodes = GetNodesInSector(position, anglev, conf.sectorWidth, v.teamId, conf.sectorRadius, conf.ignoreNeutrals, SMARTMISSILE_CONFIG[GetNodeProjectileSaveName(v.projectileNodeId)].ignoreProjectiles, conf.ignoreStructures)
-                local closestnode = ClosestOf(nodes, position)
+                local nodesPos = GetNodesInSector(position, anglev, conf.sectorWidth, v.teamId, conf.sectorRadius, conf.ignoreNeutrals, SMARTMISSILE_CONFIG[GetNodeProjectileSaveName(v.projectileNodeId)].ignoreProjectiles, conf.ignoreStructures)
+                local targetedNode = ProcessNodesInSector(nodesPos, position)
                 local angle = GetVectorAngle(anglev)
 
                 local aimat
-                if closestnode then
-                        aimat = nodes[closestnode]
-                        SpawnCircle(nodes[closestnode], 50, Colour(255, 255, 100, 255), 0.1)
+                if targetedNode then
+                        aimat = nodesPos[targetedNode]
+                        SpawnCircle(nodesPos[targetedNode], 50, Colour(255, 255, 100, 255), 0.1)
                         if conf.predictionType == 1 then
-                                aimat = nodes[closestnode] + Vec3MultiplyScalar(NodeVelocity(closestnode), Vec3Length((nodes[closestnode] - position)) / Vec3Length(NodeVelocity(v.projectileNodeId)))
+                                aimat = nodesPos[targetedNode] + Vec3MultiplyScalar(NodeVelocity(targetedNode), Vec3Length((nodesPos[targetedNode] - position)) / Vec3Length(NodeVelocity(v.projectileNodeId)))
                         elseif conf.predictionType == 2 then
-                                aimat = nodes[closestnode] + Vec3MultiplyScalar(NodeVelocity(closestnode), Vec3Length((nodes[closestnode] - position)) / Vec3Length(NodeVelocity(closestnode) - NodeVelocity(v.projectileNodeId)))
+                                aimat = nodesPos[targetedNode] + Vec3MultiplyScalar(NodeVelocity(targetedNode), Vec3Length((nodesPos[targetedNode] - position)) / Vec3Length(NodeVelocity(targetedNode) - NodeVelocity(v.projectileNodeId)))
                         elseif conf.predictionType == 3 then
                                 local acc = Vec3(0, 0)
-                                local targetvel = NodeVelocity(closestnode)
-                                local targetpos = nodes[closestnode]
+                                local targetvel = NodeVelocity(targetedNode)
+                                local targetpos = nodesPos[targetedNode]
                                 if v.lastTargetVelocity then
                                         acc = (targetvel - v.lastTargetVelocity) - (selfvel - v.lastSelfVelocity)
                                         aimat = targetpos + Vec3MultiplyScalar(targetvel, Vec3Length((targetpos - position)) / Vec3Length(targetvel - selfvel - acc))
@@ -76,7 +76,7 @@ function UpdateMissilesVision(frame)
                         v.lastTargetVelocity = nil
                 end
 
-                for i, v in pairs(nodes) do
+                for i, v in pairs(nodesPos) do
                         SpawnCircle(v, 20, Colour(255, 100, 100, 255), 0.1)
                 end
 
@@ -94,7 +94,7 @@ function UpdateMissilesVision(frame)
         end
 end
 
-function GetNodesInSector(position, anglev, degrees, teamOwner, radius, ignoreNeutrals, ignoreProjectiles, ignoreStructures)
+function GetNodesInSector(position, anglev, degrees, teamOwner, radius, ignoreNeutrals, ignoreProjectiles, ignoreStructures) -- CLEAN THIS SO IT DOESNT RUN THE SAME CODE TWICE
         --Print(GetVectorAngle(angle))
         --Print(AngleToVector(angle, 5).x .. "   " .. AngleToVector(angle, 5).y)
         --Print(angle.x .. "   " .. angle.y)
@@ -104,7 +104,7 @@ function GetNodesInSector(position, anglev, degrees, teamOwner, radius, ignoreNe
 
         DrawCircleSector(position, angle, degrees, radius, Red(), 0.05, false)
 
-        if not CheckType(enemyteams, "number") then --dont ignore neutrals
+        --if not CheckType(enemyteams, "number") then --dont ignore neutrals
                 for k, enemyteam in pairs(enemyteams) do
                         if not ignoreStructures then
                                 for i = 0, NodeCount(enemyteam), 1 do
@@ -132,33 +132,51 @@ function GetNodesInSector(position, anglev, degrees, teamOwner, radius, ignoreNe
                                 end
                         end
                 end
-        else
-                local enemyteam = enemyteams
-                if not ignoreStructures then
-                        for i = 0, NodeCount(enemyteam), 1 do
-                                local nodeid = GetNodeId(enemyteam, i)
-                                local nodepos = NodePosition(nodeid)
-                                local dirNonNor = nodepos - position
-                                --local nodeangle = GetVectorAngle(Vec3Nor(dirNonNor))
-                                local anglebetween = AngleBetweenTwoVectors(Vec3Nor(dirNonNor), anglev)
-                                if anglebetween < degrees and Vec3Length(dirNonNor) < radius and NodeExists(nodeid) then
-                                        nodes[nodeid] = nodepos
-                                end
-                        end
-                end
-
-                if not ignoreProjectiles then
-                        for i = 0, ProjectileCount(enemyteam), 1 do
-                                local nodeid = GetProjectileId(enemyteam, i)
-                                local nodepos = NodePosition(nodeid)
-                                local dirNonNor = nodepos - position
-                                --local nodeangle = GetVectorAngle(Vec3Nor(dirNonNor))
-                                local anglebetween = AngleBetweenTwoVectors(Vec3Nor(dirNonNor), anglev)
-                                if anglebetween < degrees and Vec3Length(dirNonNor) < radius and NodeExists(nodeid) and (GetNodeProjectileType(nodeid) == 2 or GetNodeProjectileType(nodeid) == 3) then
-                                        nodes[nodeid] = nodepos
-                                end
-                        end
-                end
-        end
+        --else
+        --        local enemyteam = enemyteams
+        --        if not ignoreStructures then
+        --                for i = 0, NodeCount(enemyteam), 1 do
+        --                        local nodeid = GetNodeId(enemyteam, i)
+        --                        local nodepos = NodePosition(nodeid)
+        --                        local dirNonNor = nodepos - position
+        --                        --local nodeangle = GetVectorAngle(Vec3Nor(dirNonNor))
+        --                        local anglebetween = AngleBetweenTwoVectors(Vec3Nor(dirNonNor), anglev)
+        --                        if anglebetween < degrees and Vec3Length(dirNonNor) < radius and NodeExists(nodeid) then
+        --                                nodes[nodeid] = nodepos
+        --                        end
+        --                end
+        --        end
+--
+        --        if not ignoreProjectiles then
+        --                for i = 0, ProjectileCount(enemyteam), 1 do
+        --                        local nodeid = GetProjectileId(enemyteam, i)
+        --                        local nodepos = NodePosition(nodeid)
+        --                        local dirNonNor = nodepos - position
+        --                        --local nodeangle = GetVectorAngle(Vec3Nor(dirNonNor))
+        --                        local anglebetween = AngleBetweenTwoVectors(Vec3Nor(dirNonNor), anglev)
+        --                        if anglebetween < degrees and Vec3Length(dirNonNor) < radius and NodeExists(nodeid) and (GetNodeProjectileType(nodeid) == 2 or GetNodeProjectileType(nodeid) == 3) then
+        --                                nodes[nodeid] = nodepos
+        --                        end
+        --                end
+        --        end
+        --end
         return nodes
+end
+
+function ProcessNodesInSector(table, position)
+        local closestid
+        local smallestLength = math.huge
+        for i, v in pairs(table) do
+                local len = Vec3Length(position - v)
+                --if not smallestLength then
+                --        smallestLength = len
+                --        closestid = i
+                --else
+                if smallestLength > len then
+                        smallestLength = len
+                        closestid = i
+                end
+                --end
+        end
+        return closestid
 end

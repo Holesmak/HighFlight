@@ -1,4 +1,4 @@
-function GetEnemyTeams(teamId, ignoreNeutrals)
+function GetEnemyTeams(teamId, ignoreNeutrals) -- ADD RETURN SIDES ONLY PARAM
         local teamstable = {}
         if not ignoreNeutrals then
                 --Print("Testing: " .. teamId)
@@ -11,11 +11,13 @@ function GetEnemyTeams(teamId, ignoreNeutrals)
                 end
                 return teamstable
         else
-                if teamId % 100 == 1 then
-                        return 2
-                elseif teamId % 100 == 2 then
-                        return 1
+                for i = 1, GetTeamCount(), 1 do
+                        if teamId % 100 ~= GetTeamId(i) % 100 and IsHumanOnSide(teamId % 100)then
+                                table.insert(teamstable, GetTeamId(i))
+                                --Print(GetTeamId(i))
+                        end
                 end
+                return teamstable
         end
 end
 
