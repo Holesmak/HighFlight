@@ -35,7 +35,7 @@ SMARTMISSILE_CONFIG["missile2"] = {
 }
 
 SMARTMISSILE_CONFIG["HighFlight_antiair1"] = {
-        ignoreNeutrals = false,
+        ignoreNeutrals = true,
         ignoreProjectiles = false,
         ignoreStructures = false,
         predictionType = 2,

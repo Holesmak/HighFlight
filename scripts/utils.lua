@@ -4,7 +4,8 @@ function GetEnemyTeams(teamId, ignoreNeutrals) -- ADD RETURN SIDES ONLY PARAM
                 --Print("Testing: " .. teamId)
                 --Print("Enemy table:")
                 for i = 1, GetTeamCount(), 1 do
-                        if teamId % 100 ~= GetTeamId(i) % 100 then
+                        local enemyside = GetTeamId(i) % 100
+                        if teamId % 100 ~= enemyside then
                                 table.insert(teamstable, GetTeamId(i))
                                 --Print(GetTeamId(i))
                         end
@@ -12,7 +13,8 @@ function GetEnemyTeams(teamId, ignoreNeutrals) -- ADD RETURN SIDES ONLY PARAM
                 return teamstable
         else
                 for i = 1, GetTeamCount(), 1 do
-                        if teamId % 100 ~= GetTeamId(i) % 100 and IsHumanOnSide(teamId % 100)then
+                        local enemyside = GetTeamId(i) % 100
+                        if teamId % 100 ~= enemyside and ( enemyside == TEAM_1 or enemyside == TEAM_2 ) then
                                 table.insert(teamstable, GetTeamId(i))
                                 --Print(GetTeamId(i))
                         end
