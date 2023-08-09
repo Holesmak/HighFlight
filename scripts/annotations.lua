@@ -171,6 +171,15 @@ path = ""
 ---@type table
 ---@see ShootableProjectile Table of the projectiles which will be targeted by the AI anti-air
 ShootableProjectile = {}
+---@type number
+---@see TEAM_1 Team one Id.
+TEAM_1 = 1
+---@type number
+---@see TEAM_2 Team two Id.
+TEAM_2 = 2
+---@type string
+---@see StandardDeviceSmokeEmitter Makes damaged devices smoke
+StandardDeviceSmokeEmitter = ""
 
 
 ---@class Vec3

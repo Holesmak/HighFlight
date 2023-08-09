@@ -111,7 +111,7 @@ function GetNodesInSector(position, anglev, degrees, teamOwner, radius, ignoreNe
         local enemyteams = GetEnemyTeams(teamOwner, ignoreNeutrals)
         for k, enemyteam in pairs(enemyteams) do
                 if not ignoreStructures then
-                        for i = 0, NodeCount(enemyteam), 1 do
+                        for i = 0, NodeCount(enemyteam), 10 do -- SCAN RESOLUTION. AFFECTS LAG VERY MUCH
                                 local nodeid = GetNodeId(enemyteam, i)
                                 if not NodeExists(nodeid) then
                                         continue

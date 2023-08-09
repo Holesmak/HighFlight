@@ -16,6 +16,8 @@ add guidance delay
 
 missiles fuel runs out and it transforms to a missile without thrust power and thrusting effects (if it works good)
 
+make other types of guidance (beam riding, TV(mouse), infrared(devices)) to use less radar(nodes) missiles and cause less lag
+
 make debug stuff togglable
 
 starting working on the flying stuff
