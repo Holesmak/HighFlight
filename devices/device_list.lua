@@ -1,0 +1,56 @@
+table.insert(Devices, {
+        SaveName = "HighFlight_engine1",
+        FileName = path .. "/devices/engine1.lua",
+        Icon = "hud-reactor-icon",
+        Detail = "hud-detail-reactor",
+        ShowDetails = false,
+        Enabled = true,
+        BuildTimeComplete = 1,
+        ScrapPeriod = 60,
+        MetalCost = 400,
+        EnergyCost = 750,
+        MetalRepairCost = 1200,
+        EnergyRepairCost = 3000,
+        AllowOverlap = false,
+        MaxUpAngle = StandardMaxUpAngle,
+        ScoreWeight = 10,
+        BuildOnGroundOnly = false,
+        NoReclaim = nil,
+        --TeamOwned = true,
+        SpotterTarget = true,
+        SelectEffect = "ui/hud/devices/ui_devices",
+})
+
+table.insert(Devices, {
+        SaveName = "HighFlight_command_pre",
+        FileName = path .. "/devices/command_pre.lua",
+        Icon = "hud-reactor-icon",
+        Detail = "hud-detail-reactor",
+        ShowDetails = false,
+        Enabled = false,
+        BuildTimeComplete = 1,
+        ScrapPeriod = 60,
+        MetalCost = 4000,
+        EnergyCost = 7500,
+        MetalRepairCost = 1200,
+        EnergyRepairCost = 3000,
+        AllowOverlap = false,
+        MaxUpAngle = StandardMaxUpAngle,
+        ScoreWeight = 10,
+        BuildOnGroundOnly = false,
+        NoReclaim = nil,
+        TeamOwned = true,
+        SpotterTarget = true,
+        SelectEffect = "ui/hud/devices/ui_devices",
+
+        Upgrades =
+        {
+                {
+                        Enabled = true,
+                        SaveName = "HighFlight_command",
+                        MetalCost = 0,
+                        EnergyCost = 0,
+                        Button = "",
+                },
+        }
+})

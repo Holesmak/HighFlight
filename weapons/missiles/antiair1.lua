@@ -26,21 +26,21 @@ DestroyUnderwaterEffect = "mods/dlc2/effects/device_explode_submerged_small.lua"
 ShellEffect = "effects/shell_eject_sniper.lua"
 ReloadEffect = "effects/sniper_reload.lua"
 ReloadEffectOffset = -.5
-Projectile = "HighFlight_antiair1"
+Projectile = "SM_PicketA_Pointer"
 BarrelLength = 10.0
-MinFireClearance = 500
+MinFireClearance = 0
 FireClearanceOffsetInner = 20
 FireClearanceOffsetOuter = 40
 ReloadTime = 2.8
 ReloadTimeIncludesBurst = false
-MinFireSpeed = 500.0
-MaxFireSpeed = 500.1
+MinFireSpeed = 1.0
+MaxFireSpeed = 5.1
 MinFireRadius = 600.0
 MaxFireRadius = 1560.0
 MinVisibility = 0.3
 MaxVisibilityHeight = 1000
-MinFireAngle = -50
-MaxFireAngle = 60
+MinFireAngle = -180
+MaxFireAngle = 180
 KickbackMean = 35
 KickbackStdDev = 7
 MouseSensitivityFactor = 0.6
@@ -173,12 +173,6 @@ Root =
                                         UserData = 100,
                                 },
                                 {
-                                        Name = "Hardpoint0",
-                                        Angle = 90,
-                                        Pivot = { -0.17, -0.15 },
-                                        PivotOffset = { 0, 0 },
-                                },
-                                {
                                         Name = "LaserSight",
                                         Angle = 90,
                                         Pivot = { -0.04, -0.2 },
@@ -187,6 +181,12 @@ Root =
                                 {
                                         Name = "Chamber",
                                         Angle = 0,
+                                        Pivot = { -0.17, -0.15 },
+                                        PivotOffset = { 0, 0 },
+                                },
+                                {
+                                        Name = "Hardpoint0",
+                                        Angle = 90,
                                         Pivot = { -0.17, -0.15 },
                                         PivotOffset = { 0, 0 },
                                 },

@@ -1,0 +1,12 @@
+ENGINES_VELOCITY_MUL = 1000 -- make this a table in the future
+ENGINES_ACCELERATION_MUL = 1000
+
+ENGINES_CHANGEPOS_SPEED = 25 -- REMOVE THAT AND REPLACE WITH LERP ON P COMPONENT IN PID
+
+ENGINES_SAVENAMES = {
+        "HighFlight_engine1"
+}
+
+COMMANDS_SAVENAMES = {
+        "HighFlight_command"
+}

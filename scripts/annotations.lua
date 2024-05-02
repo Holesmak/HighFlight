@@ -162,6 +162,14 @@ function GetNodeProjectileType(nodeid)
         local n
         return n
 end
+---@type function
+---@see ButtonSprite Built in function. Creates a button sprite
+---@param name string
+---@param path string
+---@param size number
+---@param size2 number
+function ButtonSprite(name, path, size--[[?]], size2--[[?]])
+end
 ---@type table
 ---@see data Table which is being synced between players. Use for storing variables and clear on OnReset
 data = {}
